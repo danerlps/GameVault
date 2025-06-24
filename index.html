@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Game Library</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-gamepad"></i> My Game Library</h1>
+                <p>Organize seus jogos e acompanhe seu progresso</p>
+            </div>
+        </header>
+        
+        <main class="app-main">
+            <div class="game-controls">
+                <div class="input-container">
+                    <input type="text" id="game-input" placeholder="Adicione um novo jogo..." class="modern-input">
+                    <button id="add-btn" class="modern-btn primary">
+                        <i class="fas fa-plus"></i> Adicionar
+                    </button>
+                </div>
+                
+                <div class="filter-container">
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fas fa-list"></i> Todos
+                        </button>
+                        <button class="filter-btn" data-filter="to-play">
+                            <i class="fas fa-clock"></i> A Jogar
+                        </button>
+                        <button class="filter-btn" data-filter="playing">
+                            <i class="fas fa-play"></i> Jogando
+                        </button>
+                        <button class="filter-btn" data-filter="played">
+                            <i class="fas fa-check"></i> Jogados
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="games-container">
+                <ul id="games-list" class="games-list"></ul>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
