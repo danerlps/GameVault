@@ -1,16 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {  
-    // Aguarda o carregamento completo do DOM antes de executar o código
-
+document.addEventListener('DOMContentLoaded', function() {
     // Elementos DOM
     const gameInput = document.getElementById('game-input');
     const addBtn = document.getElementById('add-btn');
     const gamesList = document.getElementById('games-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
+    const clickCountElement = document.getElementById('click-count');
     
     // Estado da aplicação
-    let games = JSON.parse(localStorage.getItem('games')) || []; 
-    // Recupera os jogos salvos no localStorage ou inicializa como array vazio caso não existam
-
+    let games = JSON.parse(localStorage.getItem('games')) || [];
+    let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
     let currentFilter = 'all';
     let currentGameRating = 0;
     let currentGameId = null;
@@ -19,31 +17,42 @@ document.addEventListener('DOMContentLoaded', function() {
     init();
     
     function init() {
+        // Atualiza o contador de cliques na UI
+        clickCountElement.textContent = clickCount;
         renderGames();
         setupEventListeners();
     }
     
     function setupEventListeners() {
-        // Adiciona um ouvinte de clique ao botão de adicionar jogo
-        addBtn.addEventListener('click', addGame);
+        addBtn.addEventListener('click', function() {
+            addGame();
+            // Incrementa o contador ao adicionar um jogo
+            incrementClickCount();
+        });
 
-        // Adiciona um ouvinte de tecla pressionada no campo de input para permitir adicionar jogo ao pressionar Enter
         gameInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') addGame();
+            if (e.key === 'Enter') {
+                addGame();
+                // Incrementa o contador ao adicionar um jogo com Enter
+                incrementClickCount();
+            }
         });
         
-        // Adiciona ouvintes de clique aos botões de filtro
         filterBtns.forEach(btn => {
             btn.addEventListener('click', function() {
-                // Remove a classe 'active' de todos os botões
                 filterBtns.forEach(b => b.classList.remove('active'));
-                // Adiciona a classe 'active' no botão clicado
                 this.classList.add('active');
-                // Atualiza o filtro atual com o filtro selecionado
                 currentFilter = this.dataset.filter;
                 renderGames();
             });
         });
+    }
+    
+    function incrementClickCount() {
+        clickCount++;
+        clickCountElement.textContent = clickCount;
+        // Salva o contador no localStorage
+        localStorage.setItem('clickCount', clickCount.toString());
     }
     
     function renderGames() {
@@ -101,17 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
             gamesList.appendChild(gameItem);
         });
         
-        // Adiciona ouvintes de clique nos botões de status de cada jogo
         document.querySelectorAll('.status-btn').forEach(btn => {
             btn.addEventListener('click', changeGameStatus);
         });
         
-        // Adiciona ouvintes de clique nos botões de avaliação de cada jogo
         document.querySelectorAll('.rating-btn').forEach(btn => {
             btn.addEventListener('click', openRatingModal);
         });
         
-        // Adiciona ouvintes de clique nos botões de exclusão de cada jogo
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', deleteGame);
         });
@@ -163,8 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
             addedAt: new Date().toISOString()
         };
         
-        games.unshift(newGame); // Adiciona o novo jogo no início do array
-        saveGames(); // Salva o array atualizado no localStorage
+        games.unshift(newGame);
+        saveGames();
         gameInput.value = '';
         renderGames();
         
@@ -186,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const nextIndex = (currentIndex + 1) % statusOrder.length;
         
         games[gameIndex].status = statusOrder[nextIndex];
-        saveGames(); // Salva a nova lista de jogos no localStorage após a mudança de status
+        saveGames();
         renderGames();
         
         const btn = e.target.closest('button');
@@ -230,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.classList.add('active');
         }, 10);
         
-        // Adiciona evento de clique para cada estrela da avaliação
         modal.querySelectorAll('.star').forEach(star => {
             star.addEventListener('click', function() {
                 currentGameRating = parseInt(this.dataset.rating);
@@ -247,18 +252,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Botão para confirmar a avaliação e salvar
         modal.querySelector('.confirm').addEventListener('click', function() {
             rateGame(currentGameId, currentGameRating);
             modal.remove();
         });
         
-        // Botão para cancelar e fechar o modal sem salvar
         modal.querySelector('.cancel').addEventListener('click', function() {
             modal.remove();
         });
         
-        // Fecha o modal ao clicar fora do conteúdo
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 modal.remove();
@@ -285,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (gameIndex === -1) return;
         
         games[gameIndex].rating = rating;
-        saveGames(); // Salva no localStorage a nova avaliação
+        saveGames();
         renderGames();
     }
     
@@ -299,14 +301,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         setTimeout(() => {
             games = games.filter(g => g.id !== gameId);
-            saveGames(); // Atualiza o localStorage após excluir o jogo
+            saveGames();
             renderGames();
         }, 300);
     }
     
     function saveGames() {
-        localStorage.setItem('games', JSON.stringify(games)); 
-        // Salva o array de jogos no localStorage convertendo-o para string JSON
+        localStorage.setItem('games', JSON.stringify(games));
     }
     
     function showError(message) {
