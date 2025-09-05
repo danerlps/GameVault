@@ -19,6 +19,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const playedGamesEl = document.getElementById('played-games');
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = themeToggle.querySelector('i');
+    const uploadProgress = document.getElementById('upload-progress');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const submitButton = document.getElementById('submit-button');
     
     // Variáveis de estado
     let currentFilter = 'all';
@@ -55,52 +59,54 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStats();
     
     // Event Listeners
-    if (addGameBtn) addGameBtn.addEventListener('click', () => openModal());
-    if (emptyAddBtn) emptyAddBtn.addEventListener('click', () => openModal());
-    if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeModal());
-    if (cancelButton) cancelButton.addEventListener('click', () => closeModal());
-    if (imageUploadArea) imageUploadArea.addEventListener('click', () => imageUploadInput.click());
+    addGameBtn.addEventListener('click', () => openModal());
+    emptyAddBtn.addEventListener('click', () => openModal());
+    closeModalBtn.addEventListener('click', () => closeModal());
+    cancelButton.addEventListener('click', () => closeModal());
+    imageUploadArea.addEventListener('click', () => imageUploadInput.click());
 
     // Toggle de tema
-    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+    themeToggle.addEventListener('click', toggleTheme);
 
-    if (imageUploadInput) {
-        imageUploadInput.addEventListener('change', function(e) {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    selectedImage = e.target.result;
-                    imagePreview.innerHTML = `<img src="${selectedImage}" alt="Preview">`;
-                }
-                reader.readAsDataURL(this.files[0]);
+    imageUploadInput.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            // Verificar se é uma imagem
+            if (!file.type.match('image.*')) {
+                alert('Por favor, selecione um arquivo de imagem.');
+                return;
             }
-        });
-    }
+            
+            // Verificar tamanho do arquivo (máximo 10MB para alta resolução)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('A imagem deve ter no máximo 10MB.');
+                return;
+            }
+            
+            processImage(file);
+        }
+    });
 
-    if (starRating) {
-        starRating.querySelectorAll('i').forEach(star => {
-            star.addEventListener('click', function() {
-                const value = parseInt(this.getAttribute('data-value'));
-                setRating(value);
-            });
-
-            star.addEventListener('mouseover', function() {
-                const value = parseInt(this.getAttribute('data-value'));
-                highlightStars(value);
-            });
+    starRating.querySelectorAll('i').forEach(star => {
+        star.addEventListener('click', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            setRating(value);
         });
 
-        starRating.addEventListener('mouseleave', function() {
-            highlightStars(selectedRating);
+        star.addEventListener('mouseover', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            highlightStars(value);
         });
-    }
+    });
 
-    if (gameForm) {
-        gameForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            saveGame();
-        });
-    }
+    starRating.addEventListener('mouseleave', function() {
+        highlightStars(selectedRating);
+    });
+
+    gameForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveGame();
+    });
 
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -110,13 +116,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Fechar modal ao clicar fora dele
-    if (modal) {
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-    }
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
     
     // Funções
     function toggleTheme() {
@@ -165,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             document.getElementById('modal-title').textContent = 'Adicionar Novo Jogo';
         }
+        
+        // Esconder barra de progresso
+        uploadProgress.style.display = 'none';
         
         modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
@@ -216,43 +223,142 @@ document.addEventListener('DOMContentLoaded', function() {
         renderGames();
     }
     
+    function processImage(file) {
+        // Mostrar barra de progresso
+        uploadProgress.style.display = 'block';
+        progressFill.style.width = '30%';
+        progressText.textContent = 'Carregando imagem...';
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            progressFill.style.width = '60%';
+            progressText.textContent = 'Processando imagem...';
+
+            const img = new Image();
+            img.src = e.target.result;
+
+            img.onload = function() {
+                // Criar canvas para redimensionamento em alta resolução 9:16
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Definir dimensões desejadas para alta resolução (9:16)
+                const targetWidth = 900; // Proporção 9:16
+                const targetHeight = 1600;
+                
+                // Configurar canvas com as dimensões desejadas
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
+                
+                // Calcular escala para preencher o canvas (cover)
+                const scale = Math.max(
+                    targetWidth / img.width,
+                    targetHeight / img.height
+                );
+                
+                // Calcular novas dimensões
+                const newWidth = img.width * scale;
+                const newHeight = img.height * scale;
+                
+                // Calcular posição para centralizar
+                const x = (targetWidth - newWidth) / 2;
+                const y = (targetHeight - newHeight) / 2;
+                
+                // Desenhar imagem redimensionada
+                ctx.drawImage(img, x, y, newWidth, newHeight);
+                
+                try {
+                    // Exportar com qualidade máxima
+                    selectedImage = canvas.toDataURL('image/jpeg', 0.95);
+                    
+                    // Atualizar preview
+                    imagePreview.innerHTML = `<img src="${selectedImage}" alt="Preview">`;
+                    
+                    // Completar barra de progresso
+                    progressFill.style.width = '100%';
+                    progressText.textContent = 'Imagem processada com sucesso!';
+                    
+                    // Esconder barra de progresso após um tempo
+                    setTimeout(() => {
+                        uploadProgress.style.display = 'none';
+                    }, 700);
+                } catch (error) {
+                    // Fallback: usar a imagem original
+                    selectedImage = e.target.result;
+                    imagePreview.innerHTML = `<img src="${selectedImage}" alt="Preview">`;
+                    uploadProgress.style.display = 'none';
+                    alert('Erro ao processar a imagem. Usando imagem original.');
+                }
+            };
+
+            img.onerror = function() {
+                alert('Erro ao carregar a imagem. Tente novamente.');
+                uploadProgress.style.display = 'none';
+            };
+        };
+        
+        reader.onerror = function() {
+            alert('Erro ao ler o arquivo. Tente novamente.');
+            uploadProgress.style.display = 'none';
+        };
+        
+        reader.readAsDataURL(file);
+    }
+    
     function saveGame() {
         const title = document.getElementById('game-title').value;
         const status = document.querySelector('input[name="status"]:checked').value;
         
-        if (editingGameId !== null) {
-            // Editar jogo existente
-            const index = games.findIndex(game => game.id === editingGameId);
-            if (index !== -1) {
-                games[index] = {
-                    ...games[index],
+        // Validar título
+        if (!title.trim()) {
+            alert('Por favor, insira um título para o jogo.');
+            return;
+        }
+        
+        // Desabilitar botão para evitar múltiplos cliques
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+        
+        // Simular tempo de salvamento
+        setTimeout(() => {
+            if (editingGameId !== null) {
+                // Editar jogo existente
+                const index = games.findIndex(game => game.id === editingGameId);
+                if (index !== -1) {
+                    games[index] = {
+                        ...games[index],
+                        title,
+                        status,
+                        rating: selectedRating,
+                        image: selectedImage || games[index].image
+                    };
+                }
+            } else {
+                // Adicionar novo jogo
+                const newGame = {
+                    id: Date.now(),
                     title,
                     status,
                     rating: selectedRating,
-                    image: selectedImage || games[index].image
+                    image: selectedImage
                 };
+                
+                games.push(newGame);
             }
-        } else {
-            // Adicionar novo jogo
-            const newGame = {
-                id: Date.now(),
-                title,
-                status,
-                rating: selectedRating,
-                image: selectedImage
-            };
             
-            games.push(newGame);
-        }
-        
-        // Salvar no localStorage
-        localStorage.setItem('games', JSON.stringify(games));
-        
-        // Atualizar a interface
-        renderGames();
-        updateNoGamesMessage();
-        updateStats();
-        closeModal();
+            // Salvar no localStorage
+            localStorage.setItem('games', JSON.stringify(games));
+            
+            // Atualizar a interface
+            renderGames();
+            updateNoGamesMessage();
+            updateStats();
+            closeModal();
+            
+            // Reativar botão
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-save"></i> Salvar Jogo';
+        }, 800);
     }
     
     function renderGames() {
@@ -274,19 +380,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const gameCard = document.createElement('div');
             gameCard.className = 'game-card';
             
-            let statusText, statusClass;
+            let statusText;
             switch (game.status) {
                 case 'to-play':
                     statusText = 'Pretendo Jogar';
-                    statusClass = 'to-play';
                     break;
                 case 'playing':
                     statusText = 'Jogando';
-                    statusClass = 'playing';
                     break;
                 case 'played':
                     statusText = 'Jogado';
-                    statusClass = 'played';
                     break;
             }
             
@@ -361,17 +464,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentFilter === 'all') return true;
                 return game.status === currentFilter;
             });
-            if (filteredGames.length === 0) {
-                noGames.style.display = 'flex';
-            } else {
-                noGames.style.display = 'none';
-            }
+            
+            noGames.style.display = filteredGames.length === 0 ? 'flex' : 'none';
         }
     }
     
     function updateStats() {
         totalGamesEl.textContent = games.length;
-        const playedGames = games.filter(game => game.status === 'played').length;
-        playedGamesEl.textContent = playedGames;
+        
+        const playedCount = games.filter(game => game.status === 'played').length;
+        playedGamesEl.textContent = playedCount;
     }
 });

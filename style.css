@@ -117,18 +117,18 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 280px;
+    width: 250px; /* Largura reduzida */
     background-color: var(--bg-primary);
-    padding: 1.5rem;
+    padding: 1.25rem; /* Padding reduzido */
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem; /* Espaço reduzido */
 }
 
 .filters-section h2, .stats-section h2 {
     font-size: 1.1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem; /* Margem reduzida */
     color: var(--text-secondary);
     font-weight: 600;
 }
@@ -136,22 +136,23 @@ body {
 .filter-buttons {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem; /* Espaço reduzido */
 }
 
 .filter-btn {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1rem;
+    gap: 0.5rem; /* Espaço reduzido */
+    padding: 0.75rem 0.875rem; /* Padding reduzido */
     background: none;
     border: none;
-    border-radius: 12px;
+    border-radius: 10px; /* Border radius reduzido */
     color: var(--text-secondary);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
+    font-size: 0.9rem; /* Tamanho de fonte reduzido */
 }
 
 .filter-btn:hover {
@@ -165,40 +166,40 @@ body {
 }
 
 .filter-btn i {
-    font-size: 1.1rem;
-    width: 20px;
+    font-size: 1rem; /* Tamanho de ícone reduzido */
+    width: 18px; /* Largura reduzida */
 }
 
 /* Estatísticas */
 .stats {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem; /* Espaço reduzido */
 }
 
 .stat-item {
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 0.75rem; /* Padding reduzido */
     background-color: var(--bg-tertiary);
-    border-radius: 12px;
+    border-radius: 10px; /* Border radius reduzido */
 }
 
 .stat-number {
-    font-size: 1.75rem;
+    font-size: 1.5rem; /* Tamanho reduzido */
     font-weight: 700;
     color: var(--primary);
 }
 
 .stat-label {
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Tamanho reduzido */
     color: var(--text-secondary);
 }
 
 /* Área de conteúdo */
 .content-area {
     flex: 1;
-    padding: 2rem;
+    padding: 1.5rem; /* Padding reduzido */
     background-color: var(--bg-secondary);
     overflow-y: auto;
 }
@@ -207,11 +208,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* Margem reduzida */
 }
 
 .content-header h2 {
-    font-size: 1.75rem;
+    font-size: 1.5rem; /* Tamanho reduzido */
     font-weight: 700;
     color: var(--text-primary);
 }
@@ -220,14 +221,15 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.625rem 1rem; /* Padding reduzido */
     background-color: var(--primary);
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 8px; /* Border radius reduzido */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 0.9rem; /* Tamanho de fonte reduzido */
 }
 
 .add-button:hover {
@@ -235,57 +237,69 @@ body {
     transform: translateY(-2px);
 }
 
-/* Grid de jogos */
+/* Grid de jogos - PROPORÇÃO 9:16 COMPACTA */
 .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Cards menores */
+    gap: 1.5rem; /* Espaço reduzido */
 }
 
 .game-card {
     background-color: var(--card-bg);
-    border-radius: 16px;
+    border-radius: 12px; /* Border radius reduzido */
     overflow: hidden;
-    box-shadow: 0 8px 20px var(--card-shadow);
+    box-shadow: 0 6px 15px var(--card-shadow); /* Sombra mais suave */
     transition: all 0.3s ease;
     position: relative;
     border: 1px solid var(--border);
+    /* Proporção 9:16 compacta */
+    aspect-ratio: 9/16;
+    max-width: 220px; /* Largura máxima reduzida */
+    margin: 0 auto;
 }
 
 .game-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px var(--card-shadow);
+    transform: translateY(-3px); /* Elevação reduzida */
+    box-shadow: 0 8px 20px var(--card-shadow);
 }
 
+/* Área da imagem do card - PROPORÇÃO 9:16 compacta */
 .game-image {
-    height: 200px;
     width: 100%;
-    background: linear-gradient(45deg, var(--secondary) 0%, var(--primary) 100%);
+    height: 60%; /* Altura reduzida para a imagem */
+    overflow: hidden;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    position: relative;
+    background: linear-gradient(45deg, var(--secondary) 0%, var(--primary) 100%);
 }
 
+/* IMAGEM - PREENCHER TOTALMENTE O ESPAÇO 9:16 */
 .game-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover .game-image img {
+    transform: scale(1.03); /* Zoom mais sutil */
 }
 
 .game-image .placeholder {
     color: rgba(255, 255, 255, 0.7);
-    font-size: 3rem;
+    font-size: 2rem; /* Tamanho reduzido */
 }
 
 .game-status-badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 0.35rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    top: 8px; /* Posição ajustada */
+    right: 8px; /* Posição ajustada */
+    padding: 0.25rem 0.5rem; /* Padding reduzido */
+    border-radius: 15px; /* Border radius reduzido */
+    font-size: 0.7rem; /* Tamanho reduzido */
     font-weight: 600;
     backdrop-filter: blur(10px);
     background-color: rgba(0, 0, 0, 0.5);
@@ -293,28 +307,38 @@ body {
 }
 
 .game-info {
-    padding: 1.25rem;
+    padding: 1rem; /* Padding reduzido */
+    height: 40%; /* Altura aumentada para informações */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .game-title {
-    font-size: 1.2rem;
+    font-size: 1rem; /* Tamanho reduzido */
     font-weight: 700;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem; /* Margem reduzida */
     color: var(--text-primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3; /* Altura de linha ajustada */
 }
 
 .game-rating {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem; /* Margem reduzida */
 }
 
 .stars {
     display: flex;
-    gap: 0.2rem;
+    gap: 0.15rem; /* Espaço reduzido */
 }
 
 .stars i {
     color: var(--warning);
-    font-size: 1.1rem;
+    font-size: 0.9rem; /* Tamanho reduzido */
 }
 
 .stars i.inactive {
@@ -323,22 +347,23 @@ body {
 
 .game-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem; /* Espaço reduzido */
+    margin-top: auto;
 }
 
 .action-btn {
     flex: 1;
-    padding: 0.5rem;
+    padding: 0.4rem; /* Padding reduzido */
     border: none;
-    border-radius: 8px;
-    font-size: 0.9rem;
+    border-radius: 6px; /* Border radius reduzido */
+    font-size: 0.8rem; /* Tamanho reduzido */
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0.3rem; /* Espaço reduzido */
 }
 
 .edit-btn {
@@ -367,26 +392,27 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
+    padding: 3rem 1.5rem; /* Padding reduzido */
     text-align: center;
 }
 
 .empty-icon {
-    font-size: 4rem;
+    font-size: 3rem; /* Tamanho reduzido */
     color: var(--secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Margem reduzida */
     opacity: 0.7;
 }
 
 .empty-state h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.3rem; /* Tamanho reduzido */
+    margin-bottom: 0.5rem; /* Margem reduzida */
     color: var(--text-primary);
 }
 
 .empty-state p {
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* Margem reduzida */
+    font-size: 0.9rem; /* Tamanho reduzido */
 }
 
 /* Modal */
@@ -407,12 +433,12 @@ body {
 
 .modal-container {
     background-color: var(--card-bg);
-    border-radius: 16px;
+    border-radius: 14px; /* Border radius reduzido */
     width: 100%;
-    max-width: 600px;
+    max-width: 500px; /* Largura máxima reduzida */
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
     animation: modalFadeIn 0.3s ease;
     border: 1px solid var(--border);
 }
@@ -432,12 +458,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1.25rem; /* Padding reduzido */
     border-bottom: 1px solid var(--border);
 }
 
 .modal-header h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem; /* Tamanho reduzido */
     font-weight: 700;
     color: var(--text-primary);
 }
@@ -445,13 +471,13 @@ body {
 .close-modal {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.3rem; /* Tamanho reduzido */
     color: var(--text-secondary);
     cursor: pointer;
-    padding: 0.25rem;
+    padding: 0.2rem; /* Padding reduzido */
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 35px; /* Largura reduzida */
+    height: 35px; /* Altura reduzida */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -464,18 +490,19 @@ body {
 
 /* Formulário */
 #game-form {
-    padding: 1.5rem;
+    padding: 1.25rem; /* Padding reduzido */
 }
 
 .form-section {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem; /* Margem reduzida */
 }
 
 .section-label {
     display: block;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem; /* Margem reduzida */
     font-weight: 600;
     color: var(--text-primary);
+    font-size: 0.9rem; /* Tamanho reduzido */
 }
 
 /* Upload de imagem */
@@ -484,9 +511,9 @@ body {
 }
 
 .image-preview {
-    height: 200px;
+    height: 250px; /* Altura reduzida */
     border: 2px dashed var(--border);
-    border-radius: 12px;
+    border-radius: 10px; /* Border radius reduzido */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -495,6 +522,7 @@ body {
     transition: all 0.2s ease;
     overflow: hidden;
     background-color: var(--bg-tertiary);
+    aspect-ratio: 9/16;
 }
 
 .image-preview:hover {
@@ -509,17 +537,46 @@ body {
 }
 
 .image-preview i {
-    font-size: 3rem;
-    margin-bottom: 0.75rem;
+    font-size: 2.5rem; /* Tamanho reduzido */
+    margin-bottom: 0.5rem; /* Margem reduzida */
+}
+
+/* Progresso de upload */
+.upload-progress {
+    margin-top: 0.75rem; /* Margem reduzida */
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px; /* Altura reduzida */
+    background-color: var(--bg-tertiary);
+    border-radius: 3px; /* Border radius reduzido */
+    overflow: hidden;
+    margin-bottom: 0.4rem; /* Margem reduzida */
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: var(--primary);
+    border-radius: 3px; /* Border radius reduzido */
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.8rem; /* Tamanho reduzido */
+    color: var(--text-secondary);
+    display: block;
+    text-align: center;
 }
 
 /* Campos de texto */
 .text-input {
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 0.75rem 0.875rem; /* Padding reduzido */
     border: 1px solid var(--border);
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 8px; /* Border radius reduzido */
+    font-size: 0.9rem; /* Tamanho reduzido */
     transition: all 0.2s ease;
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
@@ -539,7 +596,7 @@ body {
 .status-selector {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    gap: 0.5rem; /* Espaço reduzido */
 }
 
 .status-option input {
@@ -550,18 +607,19 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    padding: 1rem;
+    gap: 0.4rem; /* Espaço reduzido */
+    padding: 0.75rem; /* Padding reduzido */
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 8px; /* Border radius reduzido */
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
     background-color: var(--bg-tertiary);
+    font-size: 0.8rem; /* Tamanho reduzido */
 }
 
 .status-option label i {
-    font-size: 1.5rem;
+    font-size: 1.3rem; /* Tamanho reduzido */
     color: var(--text-secondary);
 }
 
@@ -579,16 +637,16 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem; /* Espaço reduzido */
 }
 
 .star-rating {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4rem; /* Espaço reduzido */
 }
 
 .star-rating i {
-    font-size: 2.2rem;
+    font-size: 1.8rem; /* Tamanho reduzido */
     color: var(--bg-tertiary);
     cursor: pointer;
     transition: color 0.2s ease;
@@ -603,7 +661,7 @@ body {
 }
 
 .rating-text {
-    font-size: 1.1rem;
+    font-size: 1rem; /* Tamanho reduzido */
     font-weight: 500;
     color: var(--text-secondary);
 }
@@ -611,16 +669,16 @@ body {
 /* Ações do formulário */
 .form-actions {
     display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 0.75rem; /* Espaço reduzido */
+    margin-top: 1.5rem; /* Margem reduzida */
 }
 
 .cancel-button, .submit-button {
     flex: 1;
-    padding: 0.875rem 1.5rem;
+    padding: 0.75rem 1.25rem; /* Padding reduzido */
     border: none;
-    border-radius: 10px;
-    font-size: 1rem;
+    border-radius: 8px; /* Border radius reduzido */
+    font-size: 0.9rem; /* Tamanho reduzido */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -641,11 +699,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 0.4rem; /* Espaço reduzido */
 }
 
 .submit-button:hover {
     background-color: var(--primary-dark);
+}
+
+.submit-button:disabled {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
 }
 
 /* Responsividade */
@@ -658,6 +722,7 @@ body {
         width: 100%;
         border-right: none;
         border-bottom: 1px solid var(--border);
+        padding: 1rem; /* Padding reduzido */
     }
     
     .filter-buttons {
@@ -668,39 +733,61 @@ body {
     
     .filter-btn {
         white-space: nowrap;
+        font-size: 0.8rem; /* Tamanho reduzido */
+        padding: 0.5rem 0.75rem; /* Padding reduzido */
     }
     
     .stats {
         flex-direction: row;
         overflow-x: auto;
+        gap: 0.5rem; /* Espaço reduzido */
     }
     
     .stat-item {
-        min-width: 150px;
+        min-width: 120px; /* Largura mínima reduzida */
+        padding: 0.5rem; /* Padding reduzido */
+    }
+    
+    .games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Cards ainda menores */
+        gap: 1rem; /* Espaço reduzido */
+    }
+    
+    .content-area {
+        padding: 1rem; /* Padding reduzido */
     }
 }
 
 @media (max-width: 600px) {
     .app-header {
-        padding: 1.25rem 1.5rem;
+        padding: 1rem 1.25rem; /* Padding reduzido */
     }
     
     .header-content h1 {
-        font-size: 1.75rem;
+        font-size: 1.8rem; /* Tamanho reduzido */
     }
     
     .content-area {
-        padding: 1.5rem;
+        padding: 1rem; /* Padding reduzido */
     }
     
     .content-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 0.75rem; /* Espaço reduzido */
+    }
+    
+    .content-header h2 {
+        font-size: 1.3rem; /* Tamanho reduzido */
     }
     
     .games-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Cards ainda menores */
+    }
+    
+    .game-card {
+        max-width: 100%;
+        border-radius: 10px; /* Border radius reduzido */
     }
     
     .status-selector {
@@ -709,5 +796,14 @@ body {
     
     .form-actions {
         flex-direction: column;
+    }
+    
+    .image-preview {
+        height: 200px; /* Altura reduzida */
+    }
+    
+    .modal-container {
+        max-width: 95%; /* Largura máxima aumentada */
+        margin: 0.5rem; /* Margem reduzida */
     }
 }
