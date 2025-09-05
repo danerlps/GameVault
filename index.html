@@ -3,95 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha Biblioteca de Jogos</title>
+    <title>GameVault - Sua Biblioteca de Jogos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Minha Biblioteca de Jogos</h1>
-        <p class="subtitle">Organize seus jogos e acompanhe seu progresso</p>
-    </header>
-
-    <div class="container">
-        <aside class="sidebar">
-            <div class="filters">
-                <h2>Filtros</h2>
-                <button class="filter-btn active" data-filter="all">
-                    <i class="fas fa-gamepad"></i>Todos
-                </button>
-                <button class="filter-btn" data-filter="to-play">
-                    <i class="fas fa-plus-circle"></i>Pretendo Jogar
-                </button>
-                <button class="filter-btn" data-filter="playing">
-                    <i class="fas fa-play-circle"></i>Jogando
-                </button>
-                <button class="filter-btn" data-filter="played">
-                    <i class="fas fa-check-circle"></i>Jogados
-                </button>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-gamepad"></i> GameVault</h1>
+                <p class="subtitle">Sua biblioteca pessoal de jogos</p>
             </div>
+        </header>
 
-            <button class="add-btn" id="add-game-btn">
-                <i class="fas fa-plus"></i>Adicionar Jogo
-            </button>
-        </aside>
-
-        <main class="main-content">
-            <div class="games-grid" id="games-container">
-                <!-- Jogos serão adicionados aqui via JavaScript -->
-            </div>
-            
-            <div class="no-games" id="no-games">
-                <p>Nenhum jogo encontrado. Clique em "Adicionar Jogo" para começar!</p>
-            </div>
-        </main>
-    </div>
-
-    <!-- Modal para adicionar/editar jogos -->
-    <div class="modal" id="game-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Adicionar Novo Jogo</h2>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="game-form">
-                <input type="hidden" id="game-id">
-                
-                <div class="image-upload">
-                    <div class="image-preview" id="image-preview">
-                        <i class="fas fa-image placeholder"></i>
-                    </div>
-                    <input type="file" id="image-upload-input" accept="image/*" hidden>
-                    <button type="button" class="upload-btn" id="upload-trigger">Selecionar Imagem</button>
-                </div>
-                
-                <div class="form-group">
-                    <label for="game-title">Título do Jogo</label>
-                    <input type="text" id="game-title" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="game-status">Status</label>
-                    <select id="game-status" class="form-control">
-                        <option value="to-play">Pretendo Jogar</option>
-                        <option value="playing">Jogando</option>
-                        <option value="played">Jogado</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Avaliação</label>
-                    <div class="star-rating" id="star-rating">
-                        <i class="far fa-star" data-value="1"></i>
-                        <i class="far fa-star" data-value="2"></i>
-                        <i class="far fa-star" data-value="3"></i>
-                        <i class="far fa-star" data-value="4"></i>
-                        <i class="far fa-star" data-value="5"></i>
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="filters-section">
+                    <h2>Filtrar por</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">
+                            <i class="fas fa-th-large"></i> Todos
+                        </button>
+                        <button class="filter-btn" data-filter="to-play">
+                            <i class="fas fa-clock"></i> Pretendo Jogar
+                        </button>
+                        <button class="filter-btn" data-filter="playing">
+                            <i class="fas fa-play-circle"></i> Jogando
+                        </button>
+                        <button class="filter-btn" data-filter="played">
+                            <i class="fas fa-check-circle"></i> Jogados
+                        </button>
                     </div>
                 </div>
+
+                <div class="stats-section">
+                    <h2>Estatísticas</h2>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-games">0</span>
+                            <span class="stat-label">Jogos no total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="played-games">0</span>
+                            <span class="stat-label">Jogos finalizados</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="content-area">
+                <div class="content-header">
+                    <h2 id="current-filter">Todos os Jogos</h2>
+                    <button class="add-button" id="add-game-btn">
+                        <i class="fas fa-plus"></i> Adicionar Jogo
+                    </button>
+                </div>
+
+                <div class="games-grid" id="games-container">
+                    <!-- Jogos serão adicionados aqui via JavaScript -->
+                </div>
                 
-                <button type="submit" class="submit-btn">Salvar Jogo</button>
-            </form>
+                <div class="empty-state" id="no-games">
+                    <div class="empty-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Sua biblioteca está vazia</h3>
+                    <p>Adicione seu primeiro jogo para começar</p>
+                    <button class="add-button" id="empty-add-btn">
+                        <i class="fas fa-plus"></i> Adicionar Jogo
+                    </button>
+                </div>
+            </main>
+        </div>
+
+        <!-- Modal para adicionar/editar jogos -->
+        <div class="modal-overlay" id="game-modal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2 id="modal-title">Adicionar Novo Jogo</h2>
+                    <button class="close-modal" id="close-modal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="game-form">
+                    <input type="hidden" id="game-id">
+                    
+                    <div class="form-section">
+                        <label class="section-label">Capa do Jogo</label>
+                        <div class="image-upload-area" id="image-upload-area">
+                            <div class="image-preview" id="image-preview">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Clique para adicionar uma imagem</p>
+                            </div>
+                            <input type="file" id="image-upload-input" accept="image/*" hidden>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label for="game-title" class="section-label">Título do Jogo</label>
+                        <input type="text" id="game-title" class="text-input" placeholder="Ex: The Witcher 3" required>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label for="game-status" class="section-label">Status</label>
+                        <div class="status-selector">
+                            <div class="status-option">
+                                <input type="radio" id="status-to-play" name="status" value="to-play" checked>
+                                <label for="status-to-play">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Pretendo Jogar</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" id="status-playing" name="status" value="playing">
+                                <label for="status-playing">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span>Jogando</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" id="status-played" name="status" value="played">
+                                <label for="status-played">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Jogado</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <label class="section-label">Avaliação</label>
+                        <div class="rating-selector">
+                            <div class="star-rating" id="star-rating">
+                                <i class="far fa-star" data-value="1"></i>
+                                <i class="far fa-star" data-value="2"></i>
+                                <i class="far fa-star" data-value="3"></i>
+                                <i class="far fa-star" data-value="4"></i>
+                                <i class="far fa-star" data-value="5"></i>
+                            </div>
+                            <div class="rating-text" id="rating-text">Sem avaliação</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="cancel-button" id="cancel-button">Cancelar</button>
+                        <button type="submit" class="submit-button">
+                            <i class="fas fa-save"></i> Salvar Jogo
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
