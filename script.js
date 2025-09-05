@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentFilterText = document.getElementById('current-filter');
     const totalGamesEl = document.getElementById('total-games');
     const playedGamesEl = document.getElementById('played-games');
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('i');
     
     // Variáveis de estado
     let currentFilter = 'all';
@@ -24,6 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedImage = null;
     let games = JSON.parse(localStorage.getItem('games')) || [];
     let editingGameId = null;
+    
+    // Verificar preferência de tema salva
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.remove('dark-mode');
+        themeIcon.classList.remove('fa-sun');
+        themeIcon.classList.add('fa-moon');
+    } else {
+        document.body.classList.add('dark-mode');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
     
     // Textos para avaliações
     const ratingTexts = {
@@ -41,59 +55,84 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStats();
     
     // Event Listeners
-    addGameBtn.addEventListener('click', () => openModal());
-    emptyAddBtn.addEventListener('click', () => openModal());
-    closeModalBtn.addEventListener('click', () => closeModal());
-    cancelButton.addEventListener('click', () => closeModal());
-    imageUploadArea.addEventListener('click', () => imageUploadInput.click());
-    
-    imageUploadInput.addEventListener('change', function(e) {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                selectedImage = e.target.result;
-                imagePreview.innerHTML = `<img src="${selectedImage}" alt="Preview">`;
+    if (addGameBtn) addGameBtn.addEventListener('click', () => openModal());
+    if (emptyAddBtn) emptyAddBtn.addEventListener('click', () => openModal());
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeModal());
+    if (cancelButton) cancelButton.addEventListener('click', () => closeModal());
+    if (imageUploadArea) imageUploadArea.addEventListener('click', () => imageUploadInput.click());
+
+    // Toggle de tema
+    if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
+
+    if (imageUploadInput) {
+        imageUploadInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImage = e.target.result;
+                    imagePreview.innerHTML = `<img src="${selectedImage}" alt="Preview">`;
+                }
+                reader.readAsDataURL(this.files[0]);
             }
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-    
-    starRating.querySelectorAll('i').forEach(star => {
-        star.addEventListener('click', function() {
-            const value = parseInt(this.getAttribute('data-value'));
-            setRating(value);
         });
-        
-        star.addEventListener('mouseover', function() {
-            const value = parseInt(this.getAttribute('data-value'));
-            highlightStars(value);
+    }
+
+    if (starRating) {
+        starRating.querySelectorAll('i').forEach(star => {
+            star.addEventListener('click', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                setRating(value);
+            });
+
+            star.addEventListener('mouseover', function() {
+                const value = parseInt(this.getAttribute('data-value'));
+                highlightStars(value);
+            });
         });
-    });
-    
-    starRating.addEventListener('mouseleave', function() {
-        highlightStars(selectedRating);
-    });
-    
-    gameForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        saveGame();
-    });
-    
+
+        starRating.addEventListener('mouseleave', function() {
+            highlightStars(selectedRating);
+        });
+    }
+
+    if (gameForm) {
+        gameForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveGame();
+        });
+    }
+
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             const filter = this.getAttribute('data-filter');
             setFilter(filter, this.textContent.trim());
         });
     });
-    
+
     // Fechar modal ao clicar fora dele
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
     
     // Funções
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        
+        if (document.body.classList.contains('dark-mode')) {
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+            localStorage.setItem('theme', 'light');
+        }
+    }
+    
     function openModal(game = null) {
         editingGameId = game ? game.id : null;
         
@@ -322,15 +361,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentFilter === 'all') return true;
                 return game.status === currentFilter;
             });
-            
-            noGames.style.display = filteredGames.length === 0 ? 'flex' : 'none';
+            if (filteredGames.length === 0) {
+                noGames.style.display = 'flex';
+            } else {
+                noGames.style.display = 'none';
+            }
         }
     }
     
     function updateStats() {
         totalGamesEl.textContent = games.length;
-        
-        const playedCount = games.filter(game => game.status === 'played').length;
-        playedGamesEl.textContent = playedCount;
+        const playedGames = games.filter(game => game.status === 'played').length;
+        playedGamesEl.textContent = playedGames;
     }
 });
