@@ -46,10 +46,10 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--card-bg);
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .app-container::before {
@@ -90,6 +90,7 @@ body {
 .header-content {
     max-width: 800px;
     margin: 0 auto;
+    position: relative;
 }
 
 .app-header h1 {
@@ -142,6 +143,7 @@ body {
     font-size: 1rem;
     transition: var(--transition);
     background-color: var(--card-bg);
+    color: var(--text-color);
     box-shadow: var(--shadow);
 }
 
@@ -207,7 +209,7 @@ body {
 }
 
 .filter-btn:hover:not(.active) {
-    background-color: #f1f1f1;
+    background-color: var(--background);
 }
 
 .games-container {
@@ -232,13 +234,13 @@ body {
     box-shadow: var(--shadow);
     border-left: 4px solid var(--border-color);
     margin-bottom: 0.8rem;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
 }
 
 .game-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-light);
 }
 
 .game-item.to-play {
@@ -393,10 +395,16 @@ body {
     font-size: 2rem;
     cursor: pointer;
     transition: var(--transition);
+    color: var(--text-light);
 }
 
 .star-rating .star:hover {
     transform: scale(1.2);
+    color: #fdcb6e;
+}
+
+.star-rating .star[data-rating].active {
+    color: #fdcb6e;
 }
 
 .modal-buttons {
@@ -425,7 +433,7 @@ body {
 }
 
 .modal-btn.cancel {
-    background-color: #dfe6e9;
+    background-color: var(--border-color);
     color: var(--text-light);
 }
 
@@ -503,20 +511,7 @@ body::after {
         linear-gradient(90deg, rgba(0, 0, 0, 0.05) 2px, transparent 2px);
     background-size: 20px 20px;
     z-index: -1;
-    opacity: 1;
-}
-
-/* Ajustes para melhor contraste */
-.modern-input {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.filter-btn {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.no-games {
-    background-color: rgba(255, 255, 255, 0.8);
+    opacity: 0.3;
 }
 
 /* Botão de alternância de tema */
@@ -554,4 +549,19 @@ body[data-theme='dark'] .theme-toggle-btn .fa-sun {
 
 body[data-theme='dark'] .theme-toggle-btn .fa-moon {
     display: none;
+}
+
+/* Ajustes para modo escuro */
+body[data-theme='dark']::before {
+    background: 
+        linear-gradient(45deg, 
+            rgba(108, 92, 231, 0.05) 0%, 
+            rgba(253, 203, 110, 0.05) 50%, 
+            rgba(0, 184, 148, 0.05) 100%);
+}
+
+body[data-theme='dark']::after {
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 2px, transparent 2px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 2px, transparent 2px);
 }

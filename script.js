@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gamesList = document.getElementById('games-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
     const clickCountElement = document.getElementById('click-count');
+    const themeToggleBtn = document.querySelector('.theme-toggle-btn');
     
     // Estado da aplicação
     let games = JSON.parse(localStorage.getItem('games')) || [];
@@ -21,6 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
         clickCountElement.textContent = clickCount;
         renderGames();
         setupEventListeners();
+        loadThemePreference();
+        // Trava a rolagem no topo
+        window.scrollTo(0, 0);
     }
     
     function setupEventListeners() {
@@ -46,6 +50,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderGames();
             });
         });
+        
+        themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+    
+    function loadThemePreference() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+    }
+    
+    function toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme') || 'light';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
     }
     
     function incrementClickCount() {
@@ -266,12 +285,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 modal.remove();
             }
         });
+        
+        // Inicializa as estrelas com a class ativa
+        highlightStars(modal, currentGameRating);
     }
     
     function updateStarsInModal(modal) {
         modal.querySelectorAll('.star').forEach(star => {
             const rating = parseInt(star.dataset.rating);
             star.textContent = rating <= currentGameRating ? '★' : '☆';
+            star.classList.toggle('active', rating <= currentGameRating);
         });
     }
     
@@ -279,6 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modal.querySelectorAll('.star').forEach(star => {
             const starRating = parseInt(star.dataset.rating);
             star.textContent = starRating <= rating ? '★' : '☆';
+            star.classList.toggle('active', starRating <= rating);
         });
     }
     
