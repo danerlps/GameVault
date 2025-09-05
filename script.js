@@ -4,12 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const addBtn = document.getElementById('add-btn');
     const gamesList = document.getElementById('games-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const clickCountElement = document.getElementById('click-count');
     const themeToggleBtn = document.querySelector('.theme-toggle-btn');
     
     // Estado da aplicação
     let games = JSON.parse(localStorage.getItem('games')) || [];
-    let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
     let currentFilter = 'all';
     let currentGameRating = 0;
     let currentGameId = null;
@@ -18,8 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     init();
     
     function init() {
-        // Atualiza o contador de cliques na UI
-        clickCountElement.textContent = clickCount;
         renderGames();
         setupEventListeners();
         loadThemePreference();
@@ -30,15 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function setupEventListeners() {
         addBtn.addEventListener('click', function() {
             addGame();
-            // Incrementa o contador ao adicionar um jogo
-            incrementClickCount();
         });
 
         gameInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addGame();
-                // Incrementa o contador ao adicionar um jogo com Enter
-                incrementClickCount();
             }
         });
         
@@ -65,13 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
-    }
-    
-    function incrementClickCount() {
-        clickCount++;
-        clickCountElement.textContent = clickCount;
-        // Salva o contador no localStorage
-        localStorage.setItem('clickCount', clickCount.toString());
     }
     
     function renderGames() {

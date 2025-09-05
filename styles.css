@@ -14,14 +14,20 @@
     --transition: all 0.3s ease;
 }
 
-/* Modo escuro */
+/* Modo escuro harmonioso */
 body[data-theme='dark'] {
-    --background: #181a20;
+    --primary-color: #7b68ee;
+    --primary-light: #9389ff;
+    --secondary-color: #26de81;
+    --playing-color: #fed330;
+    --played-color: #26de81;
+    --to-play-color: #fd9644;
+    --background: #1a1d28;
     --card-bg: #23263a;
-    --text-color: #f1f1f1;
-    --text-light: #b2bec3;
+    --text-color: #e6e9f0;
+    --text-light: #8c8f9a;
     --border-color: #353b48;
-    --shadow: 0 4px 12px rgba(0,0,0,0.25);
+    --shadow: 0 4px 12px rgba(0,0,0,0.35);
 }
 
 body {
@@ -33,7 +39,7 @@ body {
         radial-gradient(circle at 10% 20%, rgba(166, 177, 225, 0.1) 0%, transparent 20%),
         radial-gradient(circle at 90% 80%, rgba(129, 236, 236, 0.1) 0%, transparent 20%);
     min-height: 100vh;
-    overflow: hidden; /* trava o deslizamento */
+    overflow: hidden;
     position: fixed;
     width: 100vw;
     top: 0;
@@ -106,18 +112,6 @@ body {
     font-weight: 300;
     opacity: 0.9;
     margin-bottom: 0.5rem;
-}
-
-.click-counter {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.click-counter i {
-    font-size: 0.8rem;
 }
 
 .app-main {
