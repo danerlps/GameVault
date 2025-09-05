@@ -4,13 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const noGames = document.getElementById('no-games');
     const modal = document.getElementById('game-modal');
     const gameForm = document.getElementById('game-form');
-    const uploadTrigger = document.getElementById('upload-trigger');
+    const imageUploadArea = document.getElementById('image-upload-area');
     const imageUploadInput = document.getElementById('image-upload-input');
     const imagePreview = document.getElementById('image-preview');
     const starRating = document.getElementById('star-rating');
-    const closeModalBtn = document.querySelector('.close-btn');
+    const ratingText = document.getElementById('rating-text');
+    const closeModalBtn = document.getElementById('close-modal');
+    const cancelButton = document.getElementById('cancel-button');
     const addGameBtn = document.getElementById('add-game-btn');
+    const emptyAddBtn = document.getElementById('empty-add-btn');
     const filterButtons = document.querySelectorAll('.filter-btn');
+    const currentFilterText = document.getElementById('current-filter');
+    const totalGamesEl = document.getElementById('total-games');
+    const playedGamesEl = document.getElementById('played-games');
     
     // Variáveis de estado
     let currentFilter = 'all';
@@ -19,14 +25,27 @@ document.addEventListener('DOMContentLoaded', function() {
     let games = JSON.parse(localStorage.getItem('games')) || [];
     let editingGameId = null;
     
+    // Textos para avaliações
+    const ratingTexts = {
+        0: "Sem avaliação",
+        1: "Péssimo",
+        2: "Ruim",
+        3: "Regular",
+        4: "Bom",
+        5: "Excelente"
+    };
+    
     // Inicialização
     renderGames();
     updateNoGamesMessage();
+    updateStats();
     
     // Event Listeners
     addGameBtn.addEventListener('click', () => openModal());
+    emptyAddBtn.addEventListener('click', () => openModal());
     closeModalBtn.addEventListener('click', () => closeModal());
-    uploadTrigger.addEventListener('click', () => imageUploadInput.click());
+    cancelButton.addEventListener('click', () => closeModal());
+    imageUploadArea.addEventListener('click', () => imageUploadInput.click());
     
     imageUploadInput.addEventListener('change', function(e) {
         if (this.files && this.files[0]) {
@@ -44,6 +63,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const value = parseInt(this.getAttribute('data-value'));
             setRating(value);
         });
+        
+        star.addEventListener('mouseover', function() {
+            const value = parseInt(this.getAttribute('data-value'));
+            highlightStars(value);
+        });
+    });
+    
+    starRating.addEventListener('mouseleave', function() {
+        highlightStars(selectedRating);
     });
     
     gameForm.addEventListener('submit', function(e) {
@@ -54,8 +82,15 @@ document.addEventListener('DOMContentLoaded', function() {
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             const filter = this.getAttribute('data-filter');
-            setFilter(filter);
+            setFilter(filter, this.textContent.trim());
         });
+    });
+    
+    // Fechar modal ao clicar fora dele
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
     });
     
     // Funções
@@ -65,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Preencher o formulário se for edição
         if (game) {
             document.getElementById('game-title').value = game.title;
-            document.getElementById('game-status').value = game.status;
+            document.querySelector(`input[name="status"][value="${game.status}"]`).checked = true;
             setRating(game.rating);
             
             if (game.image) {
@@ -73,28 +108,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 imagePreview.innerHTML = `<img src="${game.image}" alt="Preview">`;
             } else {
                 selectedImage = null;
-                imagePreview.innerHTML = '<i class="fas fa-image placeholder"></i>';
+                imagePreview.innerHTML = `
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Clique para adicionar uma imagem</p>
+                `;
             }
             
-            document.querySelector('.modal-title').textContent = 'Editar Jogo';
+            document.getElementById('modal-title').textContent = 'Editar Jogo';
         } else {
             // Limpar o formulário para novo jogo
             gameForm.reset();
             setRating(0);
             selectedImage = null;
-            imagePreview.innerHTML = '<i class="fas fa-image placeholder"></i>';
-            document.querySelector('.modal-title').textContent = 'Adicionar Novo Jogo';
+            imagePreview.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Clique para adicionar uma imagem</p>
+            `;
+            document.getElementById('modal-title').textContent = 'Adicionar Novo Jogo';
         }
         
         modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
     }
     
     function closeModal() {
         modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
     }
     
     function setRating(value) {
         selectedRating = value;
+        highlightStars(value);
+        ratingText.textContent = ratingTexts[value];
+    }
+    
+    function highlightStars(value) {
         const stars = starRating.querySelectorAll('i');
         
         stars.forEach(star => {
@@ -111,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function setFilter(filter) {
+    function setFilter(filter, filterName) {
         currentFilter = filter;
         
         // Atualizar botões de filtro
@@ -123,12 +171,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
+        // Atualizar texto do filtro atual
+        currentFilterText.textContent = filterName;
+        
         renderGames();
     }
     
     function saveGame() {
         const title = document.getElementById('game-title').value;
-        const status = document.getElementById('game-status').value;
+        const status = document.querySelector('input[name="status"]:checked').value;
         
         if (editingGameId !== null) {
             // Editar jogo existente
@@ -161,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Atualizar a interface
         renderGames();
         updateNoGamesMessage();
+        updateStats();
         closeModal();
     }
     
@@ -187,15 +239,15 @@ document.addEventListener('DOMContentLoaded', function() {
             switch (game.status) {
                 case 'to-play':
                     statusText = 'Pretendo Jogar';
-                    statusClass = 'status-to-play';
+                    statusClass = 'to-play';
                     break;
                 case 'playing':
                     statusText = 'Jogando';
-                    statusClass = 'status-playing';
+                    statusClass = 'playing';
                     break;
                 case 'played':
                     statusText = 'Jogado';
-                    statusClass = 'status-played';
+                    statusClass = 'played';
                     break;
             }
             
@@ -204,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (i <= game.rating) {
                     starsHtml += '<i class="fas fa-star"></i>';
                 } else {
-                    starsHtml += '<i class="far fa-star"></i>';
+                    starsHtml += '<i class="fas fa-star inactive"></i>';
                 }
             }
             
@@ -212,13 +264,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="game-image">
                     ${game.image ? 
                         `<img src="${game.image}" alt="${game.title}">` : 
-                        `<i class="fas fa-image placeholder"></i>`
+                        `<i class="fas fa-gamepad placeholder"></i>`
                     }
+                    <span class="game-status-badge">${statusText}</span>
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.title}</h3>
-                    <span class="game-status ${statusClass}">${statusText}</span>
-                    <div class="rating">${starsHtml}</div>
+                    <div class="game-rating">
+                        <div class="stars">${starsHtml}</div>
+                    </div>
                     <div class="game-actions">
                         <button class="action-btn edit-btn" data-id="${game.id}">
                             <i class="fas fa-edit"></i> Editar
@@ -256,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('games', JSON.stringify(games));
             renderGames();
             updateNoGamesMessage();
+            updateStats();
         }
     }
     
@@ -272,10 +327,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Fechar modal ao clicar fora dele
-    window.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+    function updateStats() {
+        totalGamesEl.textContent = games.length;
+        
+        const playedCount = games.filter(game => game.status === 'played').length;
+        playedGamesEl.textContent = playedCount;
+    }
 });
