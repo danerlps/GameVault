@@ -14,10 +14,14 @@
     --transition: all 0.3s ease;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Modo escuro */
+body[data-theme='dark'] {
+    --background: #181a20;
+    --card-bg: #23263a;
+    --text-color: #f1f1f1;
+    --text-light: #b2bec3;
+    --border-color: #353b48;
+    --shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 body {
@@ -29,6 +33,7 @@ body {
         radial-gradient(circle at 10% 20%, rgba(166, 177, 225, 0.1) 0%, transparent 20%),
         radial-gradient(circle at 90% 80%, rgba(129, 236, 236, 0.1) 0%, transparent 20%);
     min-height: 100vh;
+    overflow: hidden; /* trava o deslizamento */
 }
 
 .app-container {
@@ -508,4 +513,41 @@ body::after {
 
 .no-games {
     background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Botão de alternância de tema */
+.theme-switcher {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+}
+
+.theme-toggle-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.theme-toggle-btn .fa-sun {
+    display: none;
+}
+
+body[data-theme='dark'] .theme-toggle-btn .fa-sun {
+    display: block;
+}
+
+body[data-theme='dark'] .theme-toggle-btn .fa-moon {
+    display: none;
 }
