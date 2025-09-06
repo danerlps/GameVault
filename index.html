@@ -94,12 +94,14 @@
                     
                     <div class="form-section">
                         <label class="section-label">Capa do Jogo</label>
-                        <div class="image-upload-area" id="image-upload-area">
-                            <div class="image-preview" id="image-preview">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <p>Clique para adicionar uma imagem</p>
+                        <div class="image-upload-container">
+                            <div class="image-upload-area" id="image-upload-area">
+                                <div class="image-preview" id="image-preview">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Clique para adicionar uma imagem</p>
+                                </div>
+                                <input type="file" id="image-upload-input" accept="image/*" hidden>
                             </div>
-                            <input type="file" id="image-upload-input" accept="image/*" hidden>
                         </div>
                         <div class="upload-progress" id="upload-progress" style="display: none;">
                             <div class="progress-bar">
@@ -152,6 +154,7 @@
                                 <i class="far fa-star" data-value="5"></i>
                             </div>
                             <div class="rating-text" id="rating-text">Sem avaliação</div>
+                            <div class="rating-hint">Clique nas estrelas para avaliar</div>
                         </div>
                     </div>
                     
