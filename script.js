@@ -505,3 +505,34 @@ document.addEventListener("DOMContentLoaded", function () {
     playedGamesEl.textContent = playedCount;
   }
 });
+
+// Elementos do DOM para o feedback
+const feedbackButton = document.getElementById("feedback-button");
+const feedbackModal = document.getElementById("feedback-modal");
+const feedbackCloseButton = document.getElementById("feedback-close-button");
+
+// Abrir modal de feedback
+if (feedbackButton) {
+    feedbackButton.addEventListener("click", () => {
+        feedbackModal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    });
+}
+
+// Fechar modal de feedback
+if (feedbackCloseButton) {
+    feedbackCloseButton.addEventListener("click", () => {
+        feedbackModal.style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+}
+
+// Fechar modal ao clicar fora dele
+if (feedbackModal) {
+    feedbackModal.addEventListener("click", (e) => {
+        if (e.target === feedbackModal) {
+            feedbackModal.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+    });
+}
