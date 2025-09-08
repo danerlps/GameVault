@@ -54,12 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
     5: "Excelente",
   };
 
-  // Textos para status
+  // Textos para status - CORREÇÃO: Adicionado texto para "dropped"
   const statusTexts = {
     "to-play": "Pretendo Jogar",
     "playing": "Jogando",
     "played": "Jogado",
-    "dropped": "Dropado"
+    "dropped": "Dropado" // CORREÇÃO: Texto adicionado para status dropped
   };
 
   // Inicialização
@@ -121,7 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
   filterButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const filter = this.getAttribute("data-filter");
-      const filterName = this.querySelector("span").textContent.trim();
+      // CORREÇÃO: Usar textContent em vez de span para pegar o nome do filtro
+      const filterName = this.textContent.trim();
       setFilter(filter, filterName);
     });
   });
@@ -275,7 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const targetWidth = 360;
         const targetHeight = 480;
 
-        // Configurar canvas with as dimensões desejadas
+        // Configurar canvas com as dimensões desejadas
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -331,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     reader.onerror = function () {
-      alert("Erro ao ler o arquivo. Tente novamente.");
+      alert("Erro ao lire o arquivo. Tente novamente.");
       uploadProgress.style.display = "none";
     };
 
@@ -414,6 +415,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const gameCard = document.createElement("div");
       gameCard.className = "game-card";
 
+      // CORREÇÃO: Usar statusTexts para obter o texto do status
+      const statusText = statusTexts[game.status] || game.status;
+
       let starsHtml = "";
       for (let i = 1; i <= 5; i++) {
         if (i <= game.rating) {
@@ -430,7 +434,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ? `<img src="${game.image}" alt="${game.title}">`
                         : `<i class="fas fa-gamepad placeholder"></i>`
                     }
-                    <span class="game-status-badge">${statusTexts[game.status]}</span>
+                    <span class="game-status-badge">${statusText}</span>
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.title}</h3>
@@ -501,6 +505,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const playedCount = games.filter((game) => game.status === "played").length;
     playedGamesEl.textContent = playedCount;
     
+    // CORREÇÃO: Contar jogos dropados
     const droppedCount = games.filter((game) => game.status === "dropped").length;
     droppedGamesEl.textContent = droppedCount;
   }
