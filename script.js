@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentFilterText = document.getElementById("current-filter");
   const totalGamesEl = document.getElementById("total-games");
   const playedGamesEl = document.getElementById("played-games");
+  const droppedGamesEl = document.getElementById("dropped-games");
   const themeToggle = document.getElementById("theme-toggle");
   const themeIcon = themeToggle.querySelector("i");
   const uploadProgress = document.getElementById("upload-progress");
@@ -51,6 +52,14 @@ document.addEventListener("DOMContentLoaded", function () {
     3: "Regular",
     4: "Bom",
     5: "Excelente",
+  };
+
+  // Textos para status
+  const statusTexts = {
+    "to-play": "Pretendo Jogar",
+    "playing": "Jogando",
+    "played": "Jogado",
+    "dropped": "Dropado"
   };
 
   // Inicialização
@@ -112,7 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
   filterButtons.forEach((button) => {
     button.addEventListener("click", function () {
       const filter = this.getAttribute("data-filter");
-      setFilter(filter, this.textContent.trim());
+      const filterName = this.querySelector("span").textContent.trim();
+      setFilter(filter, filterName);
     });
   });
 
@@ -265,7 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const targetWidth = 360;
         const targetHeight = 480;
 
-        // Configurar canvas com as dimensões desejadas
+        // Configurar canvas with as dimensões desejadas
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -404,19 +414,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const gameCard = document.createElement("div");
       gameCard.className = "game-card";
 
-      let statusText;
-      switch (game.status) {
-        case "to-play":
-          statusText = "Pretendo Jogar";
-          break;
-        case "playing":
-          statusText = "Jogando";
-          break;
-        case "played":
-          statusText = "Jogado";
-          break;
-      }
-
       let starsHtml = "";
       for (let i = 1; i <= 5; i++) {
         if (i <= game.rating) {
@@ -433,7 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         ? `<img src="${game.image}" alt="${game.title}">`
                         : `<i class="fas fa-gamepad placeholder"></i>`
                     }
-                    <span class="game-status-badge">${statusText}</span>
+                    <span class="game-status-badge">${statusTexts[game.status]}</span>
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.title}</h3>
@@ -503,6 +500,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const playedCount = games.filter((game) => game.status === "played").length;
     playedGamesEl.textContent = playedCount;
+    
+    const droppedCount = games.filter((game) => game.status === "dropped").length;
+    droppedGamesEl.textContent = droppedCount;
   }
 });
 

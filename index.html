@@ -36,6 +36,9 @@
                         <button class="filter-btn" data-filter="played">
                             <i class="fas fa-check-circle"></i> Jogados
                         </button>
+                        <button class="filter-btn" data-filter="dropped">
+                            <i class="fas fa-times-circle"></i> Dropados
+                        </button>
                     </div>
                 </div>
 
@@ -49,6 +52,10 @@
                         <div class="stat-item">
                             <span class="stat-number" id="played-games">0</span>
                             <span class="stat-label">Jogos finalizados</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="dropped-games">0</span>
+                            <span class="stat-label">Jogos dropados</span>
                         </div>
                     </div>
                 </div>
@@ -138,6 +145,13 @@
                                 <label for="status-played">
                                     <i class="fas fa-check-circle"></i>
                                     <span>Jogado</span>
+                                </label>
+                            </div>
+                            <div class="status-option">
+                                <input type="radio" id="status-dropped" name="status" value="dropped">
+                                <label for="status-dropped">
+                                    <i class="fas fa-times-circle"></i>
+                                    <span>Dropado</span>
                                 </label>
                             </div>
                         </div>

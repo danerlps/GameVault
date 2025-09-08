@@ -5,6 +5,7 @@
     --primary-light: #a29bfe;
     --secondary: #00b894;
     --accent: #fd79a8;
+    --dropped: #e17055;
     --text-primary: #2d3436;
     --text-secondary: #636e72;
     --bg-primary: #ffffff;
@@ -28,6 +29,7 @@
     --primary-light: #6c5ce7;
     --secondary: #00b894;
     --accent: #fd79a8;
+    --dropped: #e17055;
     --text-primary: #f5f6fa;
     --text-secondary: #a0a8b6;
     --bg-primary: #1e2028;
@@ -645,7 +647,7 @@ body {
 /* Seletor de status */
 .status-selector {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
 }
 
@@ -862,6 +864,10 @@ body {
         height: 240px;
         width: 150px;
     }
+    
+    .status-selector {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 @media (max-width: 600px) {
@@ -898,7 +904,7 @@ body {
     }
     
     .status-selector {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .form-actions {
